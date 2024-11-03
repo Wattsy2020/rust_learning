@@ -1,6 +1,7 @@
 use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
+use std::num::{IntErrorKind, ParseIntError};
 
 fn read_input() -> String {
     let mut input = String::new();
@@ -28,7 +29,12 @@ fn main() -> () {
         let guess_num: u32 = match trimmed.parse() {
             Ok(num) => num,
             Err(err) => {
-                println!("Error: {err}, {trimmed} is not a number");
+                match err.kind() {
+                    IntErrorKind::Empty => println!("Please enter a number"),
+                    IntErrorKind::NegOverflow => println!("Please enter a positive number"),
+                    IntErrorKind::PosOverflow => println!("Please enter a number < 100"),
+                    _ => println!("Error: {err}, {trimmed} is not a number")
+                }
                 continue;
             }
         };
