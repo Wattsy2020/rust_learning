@@ -12,6 +12,17 @@ fn fib(n: i32) -> Option<i32> {
     Some(current)
 }
 
+fn print_optional(value: Option<i32>) -> () {
+    match value {
+        Some(val) => println!("{val}"),
+        None => println!("None")
+    }
+}
+
+fn exclaim(str: &String) -> () {
+    println!("{}!", str);
+}
+
 fn main() {
     // Can check the array access
     // Also arrays have a size known at compile time
@@ -34,7 +45,7 @@ fn main() {
         let next = current + prev;
         prev = current;
         current = next;
-        i = i + 1;
+        i += 1;
     };
     println!("fib({N}): {fib_result}");
 
@@ -50,7 +61,20 @@ fn main() {
 
     let fibs = [fib(0), fib(1), fib(2), fib(3), fib(4), fib(5)];
     for result in fibs {
-        println!("{}", result.unwrap());
+        print_optional(result);
     }
     assert_eq!(fib(-1), None);
+
+    // Borrowing, need to have the function take a reference to borrow the value
+    let str = String::from("hello");
+    exclaim(&str);
+    exclaim(&str); // won't compile unless exclaim takes a reference
+
+    // Rust implicitly dereferences things when operating on them
+    let x: i32 = -1;
+    let ref_x = &x;
+    println!("{}", ref_x + x); // same result even without dereferencing
+    println!("{}", *ref_x + x);
+    let box_x = Box::new(ref_x);
+    println!("{}", box_x.abs()); // multiple layers of dereferencing
 }
