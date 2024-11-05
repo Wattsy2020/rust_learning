@@ -77,4 +77,9 @@ fn main() {
     println!("{}", *ref_x + x);
     let box_x = Box::new(ref_x);
     println!("{}", box_x.abs()); // multiple layers of dereferencing
+
+    // vector operations
+    let vec = vec!["hello", "there", "!", "general", "kenobi"];
+    let max_string_length = vec.iter().map(|str| str.len()).max().unwrap();
+    println!("{}", max_string_length);
 }
