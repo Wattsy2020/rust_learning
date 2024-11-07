@@ -54,6 +54,37 @@ fn find_contains<'a, 'b>(haystack: &'a [String], substr: &'b str) -> Vec<&'a Str
         .collect()
 }
 
+#[derive(Debug)]
+struct Complex {
+    x: i32,
+    y: i32
+}
+
+impl Complex {
+    fn add(&self, right: &Complex) -> Complex {
+        Complex {
+            x: self.x + right.x,
+            y: self.y + right.y
+        }
+    }
+
+    fn conjugate(&self) -> Complex {
+        Complex {
+            y: -self.y,
+            ..*self // can populate remaining struct fields using a spread
+        }
+    }
+
+    fn abs(&self) -> f64 {
+        ((self.x.pow(2) + self.y.pow(2)) as f64).sqrt()
+    }
+
+    // can also define associated functions that don't take self
+    fn origin() -> Complex {
+        Complex { x: 0, y: 0 }
+    }
+}
+
 fn main() {
     // Can check the array access
     // Also arrays have a size known at compile time
@@ -131,4 +162,12 @@ fn main() {
         .map(|str| String::from(*str))
         .collect();
     println!("{:?}", find_contains(&strs, "Hello"));
+
+    // structs!
+    let c1 = Complex { x: 1, y: 1 };
+    let c2 = Complex { x: 10, y: 0 };
+    println!("{c1:?}");
+    println!("{:?}", c1.add(&c2).conjugate());
+    dbg!(c1.abs());
+    println!("{:?}", Complex::origin());
 }
