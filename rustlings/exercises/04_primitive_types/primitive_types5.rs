@@ -1,8 +1,6 @@
 fn main() {
-    let cat = ("Furry McFurson", 3.5);
-
-    // TODO: Destructure the `cat` tuple in one statement so that the println works.
-    // let /* your pattern here */ = cat;
-
+    let cat = (String::from("Furry McFurson"), 3.5);
+    let (ref name, age) = cat; // ref keyword binds a non reference as a reference
+    println!("{:?}", cat);
     println!("{name} is {age} years old");
 }
