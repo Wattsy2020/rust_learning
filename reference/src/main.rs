@@ -1,4 +1,8 @@
 mod complex;
+
+use std::collections::hash_map::Entry;
+use std::collections::HashMap;
+use std::fmt::Display;
 use crate::complex::Complex;
 
 fn fib(n: i32) -> Option<i32> {
@@ -55,6 +59,14 @@ fn find_contains<'a, 'b>(haystack: &'a [String], substr: &'b str) -> Vec<&'a Str
         .iter()
         .filter(|full| full.contains(substr))
         .collect()
+}
+
+fn print_map<K: Display, V: Display>(map: & HashMap<K, V>) -> () {
+    let entries: Vec<String> = map
+        .iter()
+        .map(|(key, value)| format!("{key}: {value}"))
+        .collect();
+    println!("{{ {} }}", entries.join(", "));
 }
 
 fn main() {
@@ -135,6 +147,18 @@ fn main() {
         .collect();
     println!("{:?}", find_contains(&strs, "Hello"));
 
+    // note indexing a string by range is dangerous as well
+    let japanese = String::from("こんにちは、暑いね");
+    dbg!(japanese.chars().nth(5));
+
+    // slicing panics since japanese is encoded in multiple bytes, and 5 is in the middle of one
+    // dbg!(&japanese[5..8]);
+
+    // so string slicing is unsafe as well, you need to use the chars iterator instead
+    let chars = japanese.chars();
+    let chars_vec: Vec<char> = chars.skip(5).take(3).collect();
+    dbg!(chars_vec);
+
     // structs!
     let c1 = Complex::new(1, 1);
     let c2 = Complex::new(10, 0);
@@ -142,4 +166,19 @@ fn main() {
     println!("{:?}", c1.add(&c2).conjugate());
     dbg!(c1.abs());
     println!("{:?}", Complex::origin());
+
+    let mut strmap = HashMap::from([(1, "Hello"), (2, "there"), (4, "Kenobi")]);
+    println!("{}", strmap.get(&1).unwrap());
+    print_map(&strmap);
+    strmap.insert(2, "there!"); // replace the previous value
+    print_map(&strmap);
+
+    // entries API is efficient for checking map entries
+    // and then inserting / updating / removing from the map
+    match strmap.entry(3) {
+        Entry::Occupied(entry) => entry.remove(),
+        Entry::Vacant(entry) => entry.insert("General")
+    };
+    print_map(&strmap);
+    println!("{}", strmap.entry(5).or_insert("You"));
 }
