@@ -1,4 +1,5 @@
 mod complex;
+mod stats;
 
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
@@ -181,4 +182,24 @@ fn main() {
     };
     print_map(&strmap);
     println!("{}", strmap.entry(5).or_insert("You"));
+
+    // vector stats
+    let numbers = vec![5, 3, 9, 4, 10];
+    let numbers2 = {
+        let mut numbers = numbers.clone();
+        numbers.push(7);
+        numbers
+    };
+    let empty_vec: Vec<i32> = Vec::new();
+    println!("Mean");
+    dbg!(stats::mean(&numbers));
+    dbg!(stats::mean(&numbers2));
+    dbg!(stats::mean(&empty_vec));
+    println!("Median");
+    dbg!(stats::median(&numbers));
+    dbg!(stats::median(&numbers2));
+    dbg!(stats::median(&empty_vec));
+    println!("Mode");
+    dbg!(stats::mode(&numbers));
+    dbg!(stats::mode(&empty_vec));
 }
