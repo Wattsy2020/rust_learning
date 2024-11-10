@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::ops::Div;
 use crate::stats::IntMedian::{SingleNumber, TwoNumberMean};
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub enum IntMedian {
     SingleNumber(i32),
@@ -9,7 +10,7 @@ pub enum IntMedian {
 }
 
 /// Return the mean of a vector
-/// 
+///
 /// Returns None if the vector is empty
 pub fn mean(nums: &[i32]) -> Option<f64> {
     nums
@@ -34,7 +35,7 @@ pub fn median(nums: &[i32]) -> Option<IntMedian> {
 }
 
 /// Return the mode of a vector
-/// 
+///
 /// Returns None if the vector is empty
 pub fn mode(nums: &[i32]) -> Option<i32> {
     let mut num_counts: HashMap<i32, i32> = HashMap::new();

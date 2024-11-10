@@ -1,10 +1,12 @@
 mod complex;
 mod stats;
+mod pig_latin;
 
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
 use std::fmt::Display;
 use crate::complex::Complex;
+use crate::pig_latin::translate;
 
 fn fib(n: i32) -> Option<i32> {
     if n < 0 {
@@ -202,4 +204,6 @@ fn main() {
     println!("Mode");
     dbg!(stats::mode(&numbers));
     dbg!(stats::mode(&empty_vec));
+    
+    dbg!(translate("This program converts a sentence to pig latin"));
 }
