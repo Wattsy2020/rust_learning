@@ -12,13 +12,11 @@ pub enum IntMedian {
 /// 
 /// Returns None if the vector is empty
 pub fn mean(nums: &[i32]) -> Option<f64> {
-    let length = nums.len();
-    if length == 0 {
-        None
-    } else {
-        let sum = nums.iter().fold(0, |acc, next| acc + next);
-        Some(f64::from(sum).div(length as f64))
-    }
+    nums
+        .iter()
+        .copied()
+        .reduce(|acc, next| acc + next) // take sum
+        .map(|sum| f64::from(sum).div(nums.len() as f64)) // Option.map handles the length == 0 case
 }
 
 /// Return the median of a vector
