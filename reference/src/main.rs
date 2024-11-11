@@ -72,6 +72,20 @@ fn print_map<K: Display, V: Display>(map: & HashMap<K, V>) -> () {
     println!("{{ {} }}", entries.join(", "));
 }
 
+fn vec_max<T: PartialOrd>(items: &[T]) -> Option<&T> {
+    items
+        .iter()
+        .reduce(|largest, x| if largest > x { largest } else { x })
+}
+
+trait FancyDisplay: Display {
+    fn show_fancy(&self) -> String {
+        format!("{self} but fancy!")
+    }
+}
+
+impl<T: Display> FancyDisplay for T { }
+
 fn main() {
     // Can check the array access
     // Also arrays have a size known at compile time
@@ -206,4 +220,12 @@ fn main() {
     dbg!(stats::mode(&empty_vec));
     
     dbg!(translate("This program converts a sentence to pig latin"));
+
+    // generics
+    dbg!(vec_max(&vec![5, 3, -100, 2]));
+    dbg!(vec_max(&vec!["hello", "there", "you", "are", "a", "bold", "one"]));
+    dbg!(vec_max(&Vec::<i32>::new()));
+    
+    dbg!(52.show_fancy());
+    dbg!("hello".show_fancy());
 }
