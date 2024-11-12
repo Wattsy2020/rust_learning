@@ -1,14 +1,14 @@
 #[derive(Debug)]
 pub struct Complex {
     x: i32,
-    y: i32
+    y: i32,
 }
 
 impl Complex {
     pub fn add(&self, right: &Complex) -> Complex {
         Complex {
             x: self.x + right.x,
-            y: self.y + right.y
+            y: self.y + right.y,
         }
     }
 
@@ -22,7 +22,7 @@ impl Complex {
     pub fn abs(&self) -> f64 {
         ((self.x.pow(2) + self.y.pow(2)) as f64).sqrt()
     }
-    
+
     pub fn new(x: i32, y: i32) -> Complex {
         Complex { x, y }
     }

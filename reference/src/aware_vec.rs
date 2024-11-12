@@ -15,7 +15,7 @@ impl Emptiness for NonEmpty {}
 #[derive(Debug)]
 pub struct AwareVec<T, E: Emptiness> {
     vec: Vec<T>,
-    phantom_data: PhantomData<E>
+    phantom_data: PhantomData<E>,
 }
 
 /// Methods valid for both empty and non-empty vectors
@@ -26,7 +26,7 @@ impl<T, E: Emptiness> AwareVec<T, E> {
         vec.push(item);
         AwareVec {
             vec,
-            phantom_data: PhantomData
+            phantom_data: PhantomData,
         }
     }
 }
@@ -52,7 +52,7 @@ impl<T> AwareVec<T, NonEmpty> {
     pub fn of(item: T) -> AwareVec<T, NonEmpty> {
         AwareVec {
             vec: vec![item],
-            phantom_data: PhantomData
+            phantom_data: PhantomData,
         }
     }
 

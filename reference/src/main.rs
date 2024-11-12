@@ -1,14 +1,14 @@
-mod complex;
-mod stats;
-mod pig_latin;
 mod aware_vec;
+mod complex;
+mod pig_latin;
+mod stats;
 
-use std::collections::hash_map::Entry;
-use std::collections::HashMap;
-use std::fmt::Display;
 use crate::aware_vec::AwareVec;
 use crate::complex::Complex;
 use crate::pig_latin::translate;
+use std::collections::hash_map::Entry;
+use std::collections::HashMap;
+use std::fmt::Display;
 
 fn fib(n: i32) -> Option<i32> {
     if n < 0 {
@@ -66,7 +66,7 @@ fn find_contains<'a, 'b>(haystack: &'a [String], substr: &'b str) -> Vec<&'a Str
         .collect()
 }
 
-fn print_map<K: Display, V: Display>(map: & HashMap<K, V>) -> () {
+fn print_map<K: Display, V: Display>(map: &HashMap<K, V>) -> () {
     let entries: Vec<String> = map
         .iter()
         .map(|(key, value)| format!("{key}: {value}"))
@@ -86,7 +86,7 @@ trait FancyDisplay: Display {
     }
 }
 
-impl<T: Display> FancyDisplay for T { }
+impl<T: Display> FancyDisplay for T {}
 
 fn main() {
     // Can check the array access
@@ -196,7 +196,7 @@ fn main() {
     // and then inserting / updating / removing from the map
     match strmap.entry(3) {
         Entry::Occupied(entry) => entry.remove(),
-        Entry::Vacant(entry) => entry.insert("General")
+        Entry::Vacant(entry) => entry.insert("General"),
     };
     print_map(&strmap);
     println!("{}", strmap.entry(5).or_insert("You"));
@@ -220,14 +220,16 @@ fn main() {
     println!("Mode");
     dbg!(stats::mode(&numbers));
     dbg!(stats::mode(&empty_vec));
-    
+
     dbg!(translate("This program converts a sentence to pig latin"));
 
     // generics
     dbg!(vec_max(&vec![5, 3, -100, 2]));
-    dbg!(vec_max(&vec!["hello", "there", "you", "are", "a", "bold", "one"]));
+    dbg!(vec_max(&vec![
+        "hello", "there", "you", "are", "a", "bold", "one"
+    ]));
     dbg!(vec_max(&Vec::<i32>::new()));
-    
+
     dbg!(52.show_fancy());
     dbg!("hello".show_fancy());
 
@@ -235,5 +237,10 @@ fn main() {
     let empty_vec = AwareVec::new();
     let nonempty_vec = empty_vec.push(1);
     let nonempty_vec = nonempty_vec.push(2);
-    println!("Non Empty Vec with head: {}, tail: {}, length: {}", nonempty_vec.head(), nonempty_vec.tail(), nonempty_vec.len());
+    println!(
+        "Non Empty Vec with head: {}, tail: {}, length: {}",
+        nonempty_vec.head(),
+        nonempty_vec.tail(),
+        nonempty_vec.len()
+    );
 }

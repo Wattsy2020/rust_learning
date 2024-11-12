@@ -1,21 +1,20 @@
+use crate::stats::IntMedian::{SingleNumber, TwoNumberMean};
 use std::collections::HashMap;
 use std::hash::Hash;
 use std::ops::Div;
-use crate::stats::IntMedian::{SingleNumber, TwoNumberMean};
 
 #[allow(dead_code)]
 #[derive(Debug, PartialEq)]
 pub enum IntMedian {
     SingleNumber(i32),
-    TwoNumberMean(f64)
+    TwoNumberMean(f64),
 }
 
 /// Return the mean of a vector
 ///
 /// Returns None if the vector is empty
 pub fn mean(nums: &[i32]) -> Option<f64> {
-    nums
-        .iter()
+    nums.iter()
         .copied()
         .reduce(|acc, next| acc + next) // take sum
         .map(|sum| f64::from(sum).div(nums.len() as f64)) // Option.map handles the length == 0 case
@@ -29,7 +28,9 @@ pub fn median(nums: &[i32]) -> Option<IntMedian> {
     // note if the length is 0, subtracting 1 causes a panic, so we need to handle it with a checked sub
     let middle = length.div_ceil(2).checked_sub(1)?; // e.g. middle of 5 = index 2 (3rd item)
     if length % 2 == 0 {
-        Some(TwoNumberMean(f64::from(nums[middle] + nums[middle + 1]) / 2f64))
+        Some(TwoNumberMean(
+            f64::from(nums[middle] + nums[middle + 1]) / 2f64,
+        ))
     } else {
         Some(SingleNumber(nums[middle]))
     }
