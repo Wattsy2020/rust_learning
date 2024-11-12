@@ -231,9 +231,9 @@ fn main() {
     dbg!(52.show_fancy());
     dbg!("hello".show_fancy());
 
-    // can use generics to create a phantom type and verify that vectors are non empty
+    // can use generics to create a phantom type and verify that vectors are non-empty
     let empty_vec = AwareVec::new();
     let nonempty_vec = empty_vec.push(1);
     let nonempty_vec = nonempty_vec.push(2);
-    println!("Non Empty Vec with head: {} and tail: {}", nonempty_vec.head(), nonempty_vec.tail());
+    println!("Non Empty Vec with head: {}, tail: {}, length: {}", nonempty_vec.head(), nonempty_vec.tail(), nonempty_vec.len());
 }
