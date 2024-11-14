@@ -21,7 +21,7 @@ impl Match {
     fn new(line_number: usize, line_content: &str) -> Match {
         Match {
             line_number,
-            line_content: line_content.to_string()
+            line_content: line_content.to_string(),
         }
     }
 }
@@ -36,7 +36,7 @@ fn matches_pattern(line: &str, pattern: &str) -> bool {
     line.contains(pattern)
 }
 
-pub fn parse_matches<'a>(contents: &'a str, pattern: &'a str) -> impl 'a + Iterator<Item=Match> {
+pub fn parse_matches<'a>(contents: &'a str, pattern: &'a str) -> impl 'a + Iterator<Item = Match> {
     contents
         .lines()
         .enumerate()
@@ -50,7 +50,8 @@ mod tests {
 
     #[test]
     fn test_no_matches() {
-        let results: Vec<Match> = parse_matches("Hello there\nYou are a bold one", "Kenobi").collect();
+        let results: Vec<Match> =
+            parse_matches("Hello there\nYou are a bold one", "Kenobi").collect();
         assert_eq!(results.len(), 0);
     }
 

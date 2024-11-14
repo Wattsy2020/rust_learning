@@ -1,5 +1,5 @@
-use std::io::ErrorKind;
 use crate::argparse::Arguments;
+use std::io::ErrorKind;
 
 mod argparse;
 mod minigrep;
@@ -11,14 +11,18 @@ fn read_file(arguments: &Arguments) -> String {
         Err(err) => match err.kind() {
             ErrorKind::NotFound => panic!("File {} not found", filename),
             ErrorKind::PermissionDenied => panic!("Permission denied for file {}", filename),
-            err => panic!("Failed to parse file, received error: {}", err)
-        }
+            err => panic!("Failed to parse file, received error: {}", err),
+        },
     }
 }
 
 fn main() {
     let arguments = argparse::read_arguments();
-    println!("Searching {} for pattern: {}", arguments.filename(), arguments.pattern());
+    println!(
+        "Searching {} for pattern: {}",
+        arguments.filename(),
+        arguments.pattern()
+    );
     let file_contents = read_file(&arguments);
     let matches = minigrep::parse_matches(&file_contents, arguments.pattern());
     matches.for_each(|_match| println!("{}", _match));
