@@ -24,24 +24,24 @@ impl Match {
             line_content: line_content.to_string(),
         }
     }
+
+    fn matches_pattern(line: &str, pattern: &str) -> bool {
+        line.contains(pattern)
+    }
+
+    pub fn parse_matches<'a>(contents: &'a str, pattern: &'a str) -> impl 'a + Iterator<Item = Match> {
+        contents
+            .lines()
+            .enumerate()
+            .filter(|(_, line)| Self::matches_pattern(line, pattern))
+            .map(|(line_number, line)| Self::new(line_number + 1, line))
+    }
 }
 
 impl Display for Match {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}: {}", self.line_number, self.line_content)
     }
-}
-
-fn matches_pattern(line: &str, pattern: &str) -> bool {
-    line.contains(pattern)
-}
-
-pub fn parse_matches<'a>(contents: &'a str, pattern: &'a str) -> impl 'a + Iterator<Item = Match> {
-    contents
-        .lines()
-        .enumerate()
-        .filter(|(_, line)| matches_pattern(line, pattern))
-        .map(|(line_number, line)| Match::new(line_number + 1, line))
 }
 
 #[cfg(test)]
@@ -51,13 +51,13 @@ mod tests {
     #[test]
     fn test_no_matches() {
         let results: Vec<Match> =
-            parse_matches("Hello there\nYou are a bold one", "Kenobi").collect();
+            Match::parse_matches("Hello there\nYou are a bold one", "Kenobi").collect();
         assert_eq!(results.len(), 0);
     }
 
     #[test]
     fn test_single_line_match() {
-        let results: Vec<Match> = parse_matches("Hello there! General Kenobi", "Kenobi").collect();
+        let results: Vec<Match> = Match::parse_matches("Hello there! General Kenobi", "Kenobi").collect();
         assert_eq!(results.len(), 1);
         assert_eq!(results[0], Match::new(1, "Hello there! General Kenobi"));
     }
@@ -74,7 +74,7 @@ To an admiring bog!";
 
     #[test]
     fn test_multi_line_match() {
-        let results: Vec<Match> = parse_matches(TEST_DATA, "body").collect();
+        let results: Vec<Match> = Match::parse_matches(TEST_DATA, "body").collect();
         let expected_results = vec![
             Match::new(1, "I'm nobody! Who are you?"),
             Match::new(2, "Are you nobody, too?"),
