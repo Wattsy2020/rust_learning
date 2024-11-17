@@ -1,5 +1,8 @@
 [package]
-name = "minigrep"
+name = "minigrep_learning_2048"
+description = "Tutorial project to create the minigrep package"
+repository = "https://github.com/Wattsy2020/rust_learning"
+license = "MIT OR Apache-2.0"
 version = "0.1.0"
 edition = "2021"
 

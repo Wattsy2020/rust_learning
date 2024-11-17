@@ -1,3 +1,5 @@
+//! This library provides utilities for searching files for a given pattern
+
 mod argparse;
 mod match_parsing;
 

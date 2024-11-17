@@ -1,5 +1,7 @@
 use std::io::ErrorKind;
-use minigrep::{Arguments, ArgumentError::*}; // refer to the lib crate by the name of the package
+
+// refer to the lib crate by the name of the package
+use minigrep_learning_2048::{run, Arguments, ArgumentError::*};
 
 const CORRECT_USAGE: &str = "correct usage: `cargo run -- filename pattern`";
 
@@ -26,7 +28,7 @@ fn main() {
         arguments.pattern()
     );
 
-    let matches = match minigrep::run(&arguments) {
+    let matches = match run(&arguments) {
         Ok(matches) => matches,
         Err(file_error) => match file_error.kind() {
             ErrorKind::NotFound => panic!("File {} not found", arguments.filename()),

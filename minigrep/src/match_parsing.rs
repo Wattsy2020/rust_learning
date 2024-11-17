@@ -8,12 +8,12 @@ pub struct Match {
 }
 
 impl Match {
-    #[allow(dead_code)]
+    /// The line number of the match
     pub fn line_number(&self) -> usize {
         self.line_number
     }
 
-    #[allow(dead_code)]
+    /// The line content of the match
     pub fn line_content(&self) -> &String {
         &self.line_content
     }
@@ -29,6 +29,16 @@ impl Match {
         line.contains(pattern)
     }
 
+    /// Extract all substrings in `contents` that match the `pattern`
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use minigrep::Match;
+    /// let result = Match::parse_matches("Hello there\nGeneral Kenobi!", "Kenobi").next().unwrap();
+    /// assert_eq!(result.line_content(), "General Kenobi!");
+    /// assert_eq!(result.line_number(), 2usize);
+    /// ```
     pub fn parse_matches<'a>(contents: &'a str, pattern: &'a str) -> impl 'a + Iterator<Item = Match> {
         contents
             .lines()
