@@ -2,6 +2,7 @@ mod aware_vec;
 mod complex;
 mod pig_latin;
 mod stats;
+mod list;
 
 use crate::aware_vec::AwareVec;
 use crate::complex::Complex;
@@ -9,6 +10,7 @@ use crate::pig_latin::translate;
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
 use std::fmt::Display;
+use crate::list::List;
 
 fn fib(n: i32) -> Option<i32> {
     if n < 0 {
@@ -243,4 +245,11 @@ fn main() {
         nonempty_vec.tail(),
         nonempty_vec.len()
     );
+
+    // boxes
+    let list = List::new().prepend(1).prepend(2).prepend(3);
+    println!("{list:?}");
+    println!("{list}");
+    let result: Vec<i32> = list.iter().filter(|x| *x % 2 == 1).map(|x| x * 2).collect();
+    println!("{result:?}");
 }
