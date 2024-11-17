@@ -4,12 +4,14 @@ mod pig_latin;
 mod stats;
 mod list;
 
+use std::cell::RefCell;
 use crate::aware_vec::AwareVec;
 use crate::complex::Complex;
 use crate::pig_latin::translate;
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
 use std::fmt::Display;
+use std::rc::Rc;
 use crate::list::List;
 
 fn fib(n: i32) -> Option<i32> {
@@ -252,4 +254,17 @@ fn main() {
     println!("{list}");
     let result: Vec<i32> = list.iter().filter(|x| *x % 2 == 1).map(|x| x * 2).collect();
     println!("{result:?}");
+
+    // rc
+    let value = Rc::new(RefCell::new(5));
+
+    let a = Rc::clone(&value);
+    let b = Rc::clone(&value);
+
+    // let c = b.borrow() then using c after will cause runtime panic
+    // as the next line tries to create a mutable borrow for something that's already immutably borrowed
+    *value.borrow_mut() += 10;
+
+    println!("a after = {a:?}");
+    println!("b after = {b:?}");
 }
