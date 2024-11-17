@@ -21,35 +21,33 @@ fn divide(a: i64, b: i64) -> Result<i64, DivisionError> {
     }
 }
 
-fn reduce_result<T, Err>(results: impl Iterator<Item=Result<T, Err>>) -> Result<Vec<T>, Err> {
+fn reduce_result<T, Err>(mut results: impl Iterator<Item=Result<T, Err>>) -> Result<Vec<T>, Err> {
     results
-        .fold(Ok(Vec::new()), |vec, result| match (vec, result) {
-            (err@Err(_), _) => err,
-            (_, Err(err)) => Err(err),
-            (Ok(mut vec), Ok(result)) => {
+        .try_fold(Vec::new(), |mut vec, result| match result {
+            Err(err) => Err(err),
+            Ok(result) => {
                 vec.push(result);
                 Ok(vec)
             }
         })
 }
 
+fn divide_nums(nums: & [i64], divisor: i64) -> impl Iterator<Item=Result<i64, DivisionError>> + '_ {
+    nums.iter().map(move |n| divide(*n, divisor))
+}
+
 // TODO: Add the correct return type and complete the function body.
 // Desired output: `Ok([1, 11, 1426, 3])`
 fn result_with_list() -> Result<Vec<i64>, DivisionError> {
     let numbers = [27, 297, 38502, 81];
-    reduce_result(numbers
-        .into_iter()
-        .map(|n| divide(n, 27)))
+    reduce_result(divide_nums(&numbers, 27))
 }
 
 // TODO: Add the correct return type and complete the function body.
 // Desired output: `[Ok(1), Ok(11), Ok(1426), Ok(3)]`
 fn list_of_results() -> Vec<Result<i64, DivisionError>> {
     let numbers = [27, 297, 38502, 81];
-    numbers
-        .into_iter()
-        .map(|n| divide(n, 27))
-        .collect()
+    divide_nums(&numbers, 27).collect()
 }
 
 fn main() {
