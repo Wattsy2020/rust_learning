@@ -1,18 +1,19 @@
 mod aware_vec;
 mod complex;
+mod list;
 mod pig_latin;
 mod stats;
-mod list;
+mod threading;
 
-use std::cell::RefCell;
 use crate::aware_vec::AwareVec;
 use crate::complex::Complex;
+use crate::list::List;
 use crate::pig_latin::translate;
+use std::cell::RefCell;
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
 use std::fmt::Display;
 use std::rc::Rc;
-use crate::list::List;
 
 fn fib(n: i32) -> Option<i32> {
     if n < 0 {

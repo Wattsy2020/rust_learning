@@ -1,10 +1,10 @@
-use std::fmt::{Debug, Display, Formatter};
 use crate::list::List::*;
+use std::fmt::{Debug, Display, Formatter};
 
 #[derive(Debug)]
 pub enum List<T> {
     Nil,
-    Cons(T, Box<List<T>>)
+    Cons(T, Box<List<T>>),
 }
 
 impl<T> List<T> {
@@ -22,7 +22,7 @@ impl<T> List<T> {
 }
 
 pub struct ListIterator<'a, T: 'a> {
-    list: &'a List<T>
+    list: &'a List<T>,
 }
 
 impl<'a, T> Iterator for ListIterator<'a, T> {
