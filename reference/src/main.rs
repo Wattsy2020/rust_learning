@@ -1,15 +1,8 @@
-mod aware_vec;
-mod complex;
-mod list;
-mod pig_latin;
-mod stats;
-mod threading;
-
-use crate::aware_vec::AwareVec;
-use crate::complex::Complex;
-use crate::list::List;
-use crate::pig_latin::translate;
-use crate::threading::parallel_factorial;
+use reference::aware_vec::AwareVec;
+use reference::complex::Complex;
+use reference::list::List;
+use reference::pig_latin::translate;
+use reference::stats;
 use std::cell::RefCell;
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
@@ -269,12 +262,4 @@ fn main() {
 
     println!("a after = {a:?}");
     println!("b after = {b:?}");
-
-    // threading, can calculate super large factorials
-    let n = 1_000_000; // 10_000_000 takes far too long
-    let large_fac = parallel_factorial(n);
-    let (mantissa, exponent, _) = large_fac
-        .sci_mantissa_and_exponent_round::<f64>(malachite::rounding_modes::RoundingMode::Floor)
-        .unwrap();
-    println!("{n}! = {mantissa}^{exponent}");
 }

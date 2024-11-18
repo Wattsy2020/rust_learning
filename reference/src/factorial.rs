@@ -1,7 +1,7 @@
 use malachite::natural::{exhaustive, Natural};
 use std::thread;
 
-// the current algorithm is naive 
+// the current algorithm is naive
 // it assumes splitting the numbers evenly will give the threads an equal amount of work
 // however multiplying larger numbers takes longer
 // to evenly divide the work, we could use a sliding window approach for larger numbers
