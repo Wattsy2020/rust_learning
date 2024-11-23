@@ -8,6 +8,7 @@ use std::collections::hash_map::Entry;
 use std::collections::HashMap;
 use std::fmt::Display;
 use std::rc::Rc;
+use std::thread;
 
 fn fib(n: i32) -> Option<i32> {
     if n < 0 {
@@ -262,4 +263,9 @@ fn main() {
 
     println!("a after = {a:?}");
     println!("b after = {b:?}");
+    
+    // threading, panics are isolated to each thread
+    let panicking_thread = thread::spawn(|| panic!("Thread panic"));
+    println!("{:?}", panicking_thread.join());
+    println!("program still running after subthread panicked")
 }
