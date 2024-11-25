@@ -267,5 +267,5 @@ fn main() {
     // threading, panics are isolated to each thread
     let panicking_thread = thread::spawn(|| panic!("Thread panic"));
     println!("{:?}", panicking_thread.join());
-    println!("program still running after subthread panicked")
+    println!("program still running after subthread panicked");
 }
