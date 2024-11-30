@@ -268,4 +268,18 @@ fn main() {
     let panicking_thread = thread::spawn(|| panic!("Thread panic"));
     println!("{:?}", panicking_thread.join());
     println!("program still running after subthread panicked");
+
+    // pattern matching
+    let tuple_list = [(0, 1)];
+    let [(x, y)] = tuple_list; // works because array size is known at compile time
+    if let [(x@-1..=1, 1)] = tuple_list {
+        println!("Matched: {x}");
+    }
+    
+    let tuple_vec = vec![(1, 0), (5, 0), (6, 0)];
+    // doesn't work since Vector size isn't known at compile time, thus the pattern is refutable
+    // let [first, ..] = tuple_vec.as_slice();
+    if let [_, .., (x, y)] = tuple_vec.as_slice() {
+        println!("Matched vector slice: ({x}, {y})");
+    }
 }
