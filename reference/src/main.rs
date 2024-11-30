@@ -183,7 +183,8 @@ fn main() {
     let c1 = Complex::new(1, 1);
     let c2 = Complex::new(10, 0);
     println!("{c1:?}");
-    println!("{:?}", c1.add(&c2).conjugate());
+    println!("{:?}", (c1 + c2).conjugate());
+    println!("{:?}", c1 + 2);
     dbg!(c1.abs());
     println!("{:?}", Complex::origin());
 
