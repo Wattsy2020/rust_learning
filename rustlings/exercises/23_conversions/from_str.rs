@@ -5,9 +5,9 @@
 // more about it in the documentation:
 // https://doc.rust-lang.org/std/str/trait.FromStr.html
 
+use crate::ParsePersonError::{BadLen, NoName, ParseInt};
 use std::num::ParseIntError;
 use std::str::FromStr;
-use crate::ParsePersonError::{BadLen, NoName, ParseInt};
 
 #[derive(Debug, PartialEq)]
 struct Person {
@@ -40,10 +40,10 @@ impl FromStr for Person {
                 Err(err) => Err(ParseInt(err)),
                 Ok(age) => Ok(Person {
                     name: name.to_string(),
-                    age
-                })
-            }
-            _ => Err(BadLen)
+                    age,
+                }),
+            },
+            _ => Err(BadLen),
         }
     }
 }

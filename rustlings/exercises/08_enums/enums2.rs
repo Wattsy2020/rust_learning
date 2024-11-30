@@ -9,14 +9,11 @@ struct Point {
 #[derive(Debug)]
 enum Message {
     // TODO: Define the different variants used below.
-    Resize {
-        width: u32,
-        height: u32,
-    }, // can define a variant with named fields like a struct
+    Resize { width: u32, height: u32 }, // can define a variant with named fields like a struct
     Move(Point),
     Echo(String),
     ChangeColor(u8, u8, u8),
-    Quit
+    Quit,
 }
 
 impl Message {

@@ -12,7 +12,7 @@ impl PositiveNonzeroInteger {
         match u64::try_from(value) {
             Err(_) => Err(CreationError::Negative),
             Ok(0) => Err(CreationError::Zero),
-            Ok(result) => Ok(Self(result))
+            Ok(result) => Ok(Self(result)),
         }
     }
 }

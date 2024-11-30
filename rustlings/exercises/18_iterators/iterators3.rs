@@ -17,22 +17,24 @@ fn divide(a: i64, b: i64) -> Result<i64, DivisionError> {
         0 => Err(DivideByZero),
         -1 if a == i64::MIN => Err(IntegerOverflow),
         _ if a % b == 0 => Ok(a / b),
-        _ => Err(NotDivisible)
+        _ => Err(NotDivisible),
     }
 }
 
-fn reduce_result<T, Err>(mut results: impl Iterator<Item=Result<T, Err>>) -> Result<Vec<T>, Err> {
-    results
-        .try_fold(Vec::new(), |mut vec, result| match result {
-            Err(err) => Err(err),
-            Ok(result) => {
-                vec.push(result);
-                Ok(vec)
-            }
-        })
+fn reduce_result<T, Err>(mut results: impl Iterator<Item = Result<T, Err>>) -> Result<Vec<T>, Err> {
+    results.try_fold(Vec::new(), |mut vec, result| match result {
+        Err(err) => Err(err),
+        Ok(result) => {
+            vec.push(result);
+            Ok(vec)
+        }
+    })
 }
 
-fn divide_nums(nums: & [i64], divisor: i64) -> impl Iterator<Item=Result<i64, DivisionError>> + '_ {
+fn divide_nums(
+    nums: &[i64],
+    divisor: i64,
+) -> impl Iterator<Item = Result<i64, DivisionError>> + '_ {
     nums.iter().map(move |n| divide(*n, divisor))
 }
 

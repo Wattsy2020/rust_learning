@@ -5,8 +5,8 @@
 // https://doc.rust-lang.org/std/convert/trait.TryFrom.html
 
 #![allow(clippy::useless_vec)]
-use std::convert::{TryFrom, TryInto};
 use crate::IntoColorError::{BadLen, IntConversion};
+use std::convert::{TryFrom, TryInto};
 
 #[derive(Debug, PartialEq)]
 struct Color {
@@ -32,7 +32,7 @@ impl TryFrom<(i16, i16, i16)> for Color {
     fn try_from((r, g, b): (i16, i16, i16)) -> Result<Self, Self::Error> {
         match (r.try_into(), g.try_into(), b.try_into()) {
             (Ok(red), Ok(green), Ok(blue)) => Ok(Color { red, green, blue }),
-            _ => Err(IntConversion)
+            _ => Err(IntConversion),
         }
     }
 }
@@ -52,9 +52,9 @@ impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
 
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
-        match slice { 
+        match slice {
             [r, g, b] => (*r, *g, *b).try_into(),
-            _ => Err(BadLen)
+            _ => Err(BadLen),
         }
     }
 }

@@ -26,10 +26,13 @@ impl From<&str> for Person {
     fn from(s: &str) -> Self {
         match s.split(',').collect::<Vec<&str>>().as_slice() {
             [name, age] if !name.is_empty() => match age.parse::<u8>() {
-                Ok(age) => Person { name: name.to_string(), age },
-                Err(_) => Self::default()
+                Ok(age) => Person {
+                    name: name.to_string(),
+                    age,
+                },
+                Err(_) => Self::default(),
             },
-            _ => Self::default()
+            _ => Self::default(),
         }
     }
 }

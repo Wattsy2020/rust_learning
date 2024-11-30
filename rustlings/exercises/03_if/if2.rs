@@ -3,7 +3,7 @@ fn foo_if_fizz(fizzish: &str) -> &str {
     match fizzish {
         "fizz" => "foo",
         "fuzz" => "bar",
-        _ => "baz"
+        _ => "baz",
     }
 }
 

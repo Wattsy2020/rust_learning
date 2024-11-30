@@ -21,13 +21,16 @@ fn main() {
     };
 
     println!("{book}");
-    
+
     // The mixed lifetime lets the borrow checker release that book.author lives beyond this block
     // while book.title doesn't
     let author = "Douglas Adams";
     let author_ref = {
         let title = "Hitchhiker's Guide to the Galaxy".to_string();
-        let book = Book { author, title: &title };
+        let book = Book {
+            author,
+            title: &title,
+        };
         println!("{book}");
         book.author
     };

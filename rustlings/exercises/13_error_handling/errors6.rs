@@ -31,7 +31,6 @@ impl From<ParseIntError> for ParsePosNonzeroError {
     }
 }
 
-
 #[derive(PartialEq, Debug)]
 struct PositiveNonzeroInteger(u64);
 

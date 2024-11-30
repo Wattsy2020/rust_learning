@@ -37,7 +37,7 @@ fn fruit_basket(basket: &mut HashMap<Fruit, u32>) {
             Fruit::Banana => 5,
             Fruit::Mango => 4,
             Fruit::Lychee => 1,
-            Fruit::Pineapple => 1
+            Fruit::Pineapple => 1,
         };
         basket.entry(fruit).or_insert(fruit_count); // only insert fruit that isn't in the map
     }
