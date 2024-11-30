@@ -4,3 +4,4 @@ pub mod factorial;
 pub mod list;
 pub mod pig_latin;
 pub mod stats;
+pub mod optionalptr;

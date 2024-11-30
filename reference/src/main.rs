@@ -3,6 +3,7 @@ use reference::complex::Complex;
 use reference::list::List;
 use reference::pig_latin::translate;
 use reference::stats;
+use reference::optionalptr::OptionalPtr;
 use std::cell::RefCell;
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
@@ -271,7 +272,7 @@ fn main() {
 
     // pattern matching
     let tuple_list = [(0, 1)];
-    let [(x, y)] = tuple_list; // works because array size is known at compile time
+    let [(_x, _y)] = tuple_list; // works because array size is known at compile time
     if let [(x@-1..=1, 1)] = tuple_list {
         println!("Matched: {x}");
     }
@@ -282,4 +283,17 @@ fn main() {
     if let [_, .., (x, y)] = tuple_vec.as_slice() {
         println!("Matched vector slice: ({x}, {y})");
     }
+
+    // unsafe code
+    let str1 = "hello world".to_string();
+    let optional_ptr = OptionalPtr::some(&str1);
+    dbg!(unsafe { optional_ptr.get() });
+    dbg!(unsafe { OptionalPtr::<i32>::none().get() });
+
+    // this causes the data to be corrupted, sometimes crashes the program
+    /*let optional_ptr = {
+        let str2 = "Deallocated at end of block".to_string();
+        OptionalPtr::some(&str2)
+    };
+    println!("Incorrect data since the string was deallocated: {:?}", optional_ptr.get())*/
 }
