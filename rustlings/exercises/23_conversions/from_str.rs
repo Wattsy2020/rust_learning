@@ -7,6 +7,7 @@
 
 use std::num::ParseIntError;
 use std::str::FromStr;
+use crate::ParsePersonError::{BadLen, NoName, ParseInt};
 
 #[derive(Debug, PartialEq)]
 struct Person {
@@ -27,21 +28,24 @@ enum ParsePersonError {
 
 // TODO: Complete this `From` implementation to be able to parse a `Person`
 // out of a string in the form of "Mark,20".
-// Note that you'll need to parse the age component into a `u8` with something
-// like `"4".parse::<u8>()`.
-//
-// Steps:
-// 1. Split the given string on the commas present in it.
-// 2. If the split operation returns less or more than 2 elements, return the
-//    error `ParsePersonError::BadLen`.
-// 3. Use the first element from the split operation as the name.
-// 4. If the name is empty, return the error `ParsePersonError::NoName`.
-// 5. Parse the second element from the split operation into a `u8` as the age.
-// 6. If parsing the age fails, return the error `ParsePersonError::ParseInt`.
 impl FromStr for Person {
     type Err = ParsePersonError;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {}
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        // take 3 in order to check if there is a second comma, in which case it's a BadLen error
+        let person_parts: Vec<&str> = s.split(',').take(3).collect();
+        match person_parts.as_slice() {
+            ["", _] => Err(NoName),
+            [name, age] => match age.parse::<u8>() {
+                Err(err) => Err(ParseInt(err)),
+                Ok(age) => Ok(Person {
+                    name: name.to_string(),
+                    age
+                })
+            }
+            _ => Err(BadLen)
+        }
+    }
 }
 
 fn main() {
@@ -52,7 +56,6 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use ParsePersonError::*;
 
     #[test]
     fn empty_input() {

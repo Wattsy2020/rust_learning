@@ -6,6 +6,7 @@
 
 #![allow(clippy::useless_vec)]
 use std::convert::{TryFrom, TryInto};
+use crate::IntoColorError::{BadLen, IntConversion};
 
 #[derive(Debug, PartialEq)]
 struct Color {
@@ -28,14 +29,21 @@ enum IntoColorError {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
 
-    fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {}
+    fn try_from((r, g, b): (i16, i16, i16)) -> Result<Self, Self::Error> {
+        match (r.try_into(), g.try_into(), b.try_into()) {
+            (Ok(red), Ok(green), Ok(blue)) => Ok(Color { red, green, blue }),
+            _ => Err(IntConversion)
+        }
+    }
 }
 
 // TODO: Array implementation.
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
 
-    fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {}
+    fn try_from([r, g, b]: [i16; 3]) -> Result<Self, Self::Error> {
+        (r, g, b).try_into()
+    }
 }
 
 // TODO: Slice implementation.
@@ -43,7 +51,12 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
 
-    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {}
+    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        match slice { 
+            [r, g, b] => (*r, *g, *b).try_into(),
+            _ => Err(BadLen)
+        }
+    }
 }
 
 fn main() {
@@ -67,7 +80,6 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use IntoColorError::*;
 
     #[test]
     fn test_tuple_out_of_range_positive() {
