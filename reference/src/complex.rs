@@ -40,13 +40,13 @@ impl Add for Complex {
 }
 
 // For any T that implements adding an i32 to get an i32, implement Add for Complex
-impl<T: Add<i32, Output=i32>> Add<T> for Complex {
+impl<T: Add<i32, Output = i32>> Add<T> for Complex {
     type Output = Complex;
 
     fn add(self, rhs: T) -> Self::Output {
         Complex {
             x: rhs + self.x,
-            y: self.y
+            y: self.y,
         }
     }
 }

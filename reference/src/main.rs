@@ -1,9 +1,9 @@
 use reference::aware_vec::AwareVec;
 use reference::complex::Complex;
 use reference::list::List;
-use reference::pig_latin::translate;
-use reference::stats;
 use reference::optionalptr::OptionalPtr;
+use reference::pig_latin::translate;
+use reference::{map, stats};
 use std::cell::RefCell;
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
@@ -265,7 +265,7 @@ fn main() {
 
     println!("a after = {a:?}");
     println!("b after = {b:?}");
-    
+
     // threading, panics are isolated to each thread
     let panicking_thread = thread::spawn(|| panic!("Thread panic"));
     println!("{:?}", panicking_thread.join());
@@ -274,10 +274,10 @@ fn main() {
     // pattern matching
     let tuple_list = [(0, 1)];
     let [(_x, _y)] = tuple_list; // works because array size is known at compile time
-    if let [(x@-1..=1, 1)] = tuple_list {
+    if let [(x @ -1..=1, 1)] = tuple_list {
         println!("Matched: {x}");
     }
-    
+
     let tuple_vec = vec![(1, 0), (5, 0), (6, 0)];
     // doesn't work since Vector size isn't known at compile time, thus the pattern is refutable
     // let [first, ..] = tuple_vec.as_slice();
@@ -297,4 +297,8 @@ fn main() {
         OptionalPtr::some(&str2)
     };
     println!("Incorrect data since the string was deallocated: {:?}", optional_ptr.get())*/
+
+    // macros
+    let map = map![1 => "Hello", 2 => "World!"];
+    println!("{} {}", map.get(&1).unwrap(), map.get(&2).unwrap());
 }
