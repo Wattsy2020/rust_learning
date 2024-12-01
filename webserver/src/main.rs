@@ -1,7 +1,5 @@
-mod http_connection;
-
 use std::net::TcpListener;
-use http_connection::handle_connection;
+use webserver::http::handle_connection;
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878")
@@ -12,7 +10,7 @@ fn main() {
     for stream in listener.incoming() {
         match stream {
             Ok(stream) => handle_connection(stream),
-            Err(err) => println!("Failed to read connection, received error: {}", err.kind())
+            Err(err) => println!("Failed to read connection, received error: {}", err.kind()),
         }
     }
 }

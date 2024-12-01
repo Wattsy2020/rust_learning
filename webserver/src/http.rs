@@ -1,7 +1,22 @@
+mod method;
+mod request;
+mod response;
+mod status;
+mod version;
+
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::net::TcpStream;
 
+pub use method::HttpMethod;
+pub use request::HttpRequest;
+pub use response::HttpResponse;
+pub use status::HttpStatus;
+pub use version::HttpVersion;
+
+// todo: convert this to use the structs
+// todo: encapsulate this in a HttpConnectionHandler
+// that takes a function that maps a HttpRequest to HttpResponse
 pub fn handle_connection(mut stream: TcpStream) {
     println!("Connection established!");
 
