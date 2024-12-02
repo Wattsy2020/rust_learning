@@ -10,7 +10,7 @@ use std::str::FromStr;
 /// assert_eq!("get".parse(), Ok(HttpMethod::Get));
 /// assert_eq!("post".parse(), Ok(HttpMethod::Post));
 /// ```
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub enum HttpMethod {
     Get,
     Head,

@@ -1,4 +1,4 @@
-use crate::http::request::{StartLineParseError::*, RequestParseError::*};
+use crate::http::request::{RequestParseError::*, StartLineParseError::*};
 use crate::http::version::HttpVersion;
 use crate::http::HttpMethod;
 
@@ -19,7 +19,7 @@ pub enum StartLineParseError {
 #[derive(Debug, PartialEq, Eq)]
 pub enum RequestParseError {
     InvalidStartLine(StartLineParseError),
-    MissingStartLine
+    MissingStartLine,
 }
 
 impl HttpRequest {
@@ -50,13 +50,24 @@ impl HttpRequest {
         http_request_lines: impl Iterator<Item = String>,
     ) -> Result<HttpRequest, RequestParseError> {
         // stop parsing after the request ends with an empty line
-        let mut lines = http_request_lines
-            .take_while(|line| !line.is_empty());
+        let mut lines = http_request_lines.take_while(|line| !line.is_empty());
         lines
             .next()
             .map(|start_line| HttpRequest::from(&start_line))
             .ok_or(MissingStartLine)?
             .map_err(|err| InvalidStartLine(err))
+    }
+
+    pub fn method(&self) -> HttpMethod {
+        self.method
+    }
+
+    pub fn path(&self) -> &String {
+        &self.path
+    }
+
+    pub fn version(&self) -> HttpVersion {
+        self.version
     }
 }
 
@@ -107,13 +118,15 @@ mod tests {
 
     #[test]
     fn test_from_lines() {
-        let result = call_from_lines("POST /code HTTP/1.1")
-            .expect("Should parse correctly");
-        assert_eq!(result, HttpRequest {
-            method: HttpMethod::Post,
-            path: "/code".to_string(),
-            version: HttpVersion::Http1_1
-        });
+        let result = call_from_lines("POST /code HTTP/1.1").expect("Should parse correctly");
+        assert_eq!(
+            result,
+            HttpRequest {
+                method: HttpMethod::Post,
+                path: "/code".to_string(),
+                version: HttpVersion::Http1_1
+            }
+        );
     }
 
     #[test]
@@ -130,8 +143,7 @@ mod tests {
             call_from_lines("GET /path"),
             Err(InvalidStartLine(MissingInformation(_)))
         ));
-        
-        // add test for empty lines input
+
         let result = HttpRequest::from_lines(Vec::new().into_iter());
         assert_eq!(result, Err(MissingStartLine));
     }

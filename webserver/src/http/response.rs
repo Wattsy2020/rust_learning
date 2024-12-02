@@ -3,14 +3,14 @@ use std::fmt::{Display, Formatter};
 
 #[derive(Debug)]
 pub struct HttpResponse {
-    status: HttpStatus,
-    content: String,
-    version: HttpVersion,
+    pub status: HttpStatus,
+    pub content: String,
+    pub version: HttpVersion,
 }
 
 impl Display for HttpResponse {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} {}\n{}", self.version, self.status, self.content)
+        write!(f, "{} {}\n\n{}\n", self.version, self.status, self.content)
     }
 }
 
@@ -25,6 +25,6 @@ mod tests {
             content: "Content".to_string(),
             version: HttpVersion::Http2,
         };
-        assert_eq!(response1.to_string(), "HTTP/2 200 OK\nContent");
+        assert_eq!(response1.to_string(), "HTTP/2 200 OK\n\nContent\n");
     }
 }
