@@ -1,4 +1,4 @@
-use crate::http::{HttpRequest, HttpResponse};
+use crate::http::{HttpRequest, HttpResponse, HttpStatus, HttpVersion};
 use std::io::{BufRead, BufReader, Write};
 use std::net::{TcpListener, TcpStream};
 
@@ -37,12 +37,21 @@ impl<F: FnMut(HttpRequest) -> HttpResponse> Server<F> {
             .map(|result| result.unwrap())
             .take_while(|line| !line.is_empty());
 
-        let request = HttpRequest::from_lines(request_contents);
-        if let Ok(request) = request {
-            println!("Request: {request:#?}");
-            let response = response_fn(request);
-            stream.write_all(response.to_string().as_bytes()).unwrap();
+        match HttpRequest::from_lines(request_contents) {
+            Ok(request) => {
+                println!("Request: {request:#?}");
+                let response = response_fn(request);
+                stream.write_all(response.to_string().as_bytes()).unwrap();
+            }
+            Err(err) => {
+                let error_message = format!("Invalid request: {err:?}");
+                let response = HttpResponse {
+                    version: HttpVersion::Http1_1,
+                    status: HttpStatus::BadRequest400,
+                    content: error_message
+                };
+                stream.write_all(response.to_string().as_bytes()).unwrap();
+            }
         }
-        // todo: return bad request on parse error
     }
 }
