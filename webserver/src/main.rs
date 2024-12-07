@@ -1,16 +1,17 @@
 use std::net::TcpListener;
-use webserver::http::handle_connection;
+use webserver::http::*;
+
+fn hello_world_responder(request: HttpRequest) -> HttpResponse {
+    HttpResponse {
+        version: request.version(),
+        status: HttpStatus::Ok200,
+        content: "Hello World!".to_string(),
+    }
+}
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878")
         .expect("The 7878 port should be free, otherwise the program cannot run");
-
-    // Each stream is a connection between the client and the server
-    // In TCP, for each request received from client we need to send a response, then close the connection
-    for stream in listener.incoming() {
-        match stream {
-            Ok(stream) => handle_connection(stream),
-            Err(err) => println!("Failed to read connection, received error: {}", err.kind()),
-        }
-    }
+    let mut server = Server::new(listener, hello_world_responder);
+    server.serve();
 }
