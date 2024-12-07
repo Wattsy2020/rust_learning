@@ -48,7 +48,7 @@ impl<F: FnMut(HttpRequest) -> HttpResponse> Server<F> {
                 let response = HttpResponse {
                     version: HttpVersion::Http1_1,
                     status: HttpStatus::BadRequest400,
-                    content: error_message
+                    content: error_message,
                 };
                 stream.write_all(response.to_string().as_bytes()).unwrap();
             }

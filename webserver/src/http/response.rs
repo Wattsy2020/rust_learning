@@ -10,7 +10,14 @@ pub struct HttpResponse {
 
 impl Display for HttpResponse {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} {}\n\n{}\n", self.version, self.status, self.content)
+        write!(
+            f,
+            "{} {}\nContent-Length: {}\n\n{}",
+            self.version,
+            self.status,
+            self.content.len(),
+            self.content
+        )
     }
 }
 
@@ -25,6 +32,9 @@ mod tests {
             content: "Content".to_string(),
             version: HttpVersion::Http2,
         };
-        assert_eq!(response1.to_string(), "HTTP/2 200 OK\n\nContent\n");
+        assert_eq!(
+            response1.to_string(),
+            "HTTP/2 200 OK\nContent-Length: 7\n\nContent"
+        );
     }
 }

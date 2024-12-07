@@ -1,11 +1,21 @@
+use std::fs;
 use std::net::TcpListener;
 use webserver::http::*;
 
 fn hello_world_responder(request: HttpRequest) -> HttpResponse {
-    HttpResponse {
-        version: request.version(),
-        status: HttpStatus::Ok200,
-        content: "Hello World!".to_string(),
+    if request.path() == "/" {
+        HttpResponse {
+            version: request.version(),
+            status: HttpStatus::Ok200,
+            content: fs::read_to_string("hello.html").unwrap(),
+        }
+    }
+    else {
+        HttpResponse {
+            version: request.version(),
+            status: HttpStatus::NotFound404,
+            content: fs::read_to_string("not_found.html").unwrap()
+        }
     }
 }
 

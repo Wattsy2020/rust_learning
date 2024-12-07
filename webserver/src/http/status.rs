@@ -8,11 +8,13 @@ use std::fmt::{Display, Formatter};
 /// use webserver::http::HttpStatus;
 /// assert_eq!(HttpStatus::Ok200.to_string(), "200 OK".to_string());
 /// assert_eq!(HttpStatus::BadRequest400.to_string(), "400 Bad Request".to_string());
+/// assert_eq!(HttpStatus::NotFound404.to_string(), "404 Not Found".to_string());
 /// ```
 #[derive(Debug, PartialEq, Eq)]
 pub enum HttpStatus {
     Ok200,
     BadRequest400,
+    NotFound404,
 }
 
 impl HttpStatus {
@@ -20,6 +22,7 @@ impl HttpStatus {
         match self {
             HttpStatus::Ok200 => 200,
             HttpStatus::BadRequest400 => 400,
+            HttpStatus::NotFound404 => 404,
         }
     }
 
@@ -27,6 +30,7 @@ impl HttpStatus {
         match self {
             HttpStatus::Ok200 => "OK".to_string(),
             HttpStatus::BadRequest400 => "Bad Request".to_string(),
+            HttpStatus::NotFound404 => "Not Found".to_string(),
         }
     }
 }
