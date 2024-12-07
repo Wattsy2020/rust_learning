@@ -46,8 +46,8 @@ mod pooled_thread {
 
     /// A thread owned by the thread pool, with a way to send work to it
     pub struct PooledThread {
-        thread: thread::JoinHandle<()>,
-        work_sender: mpsc::Sender<Function>,
+        thread: Option<thread::JoinHandle<()>>,
+        work_sender: Option<mpsc::Sender<Function>>,
     }
 
     impl PooledThread {
@@ -62,14 +62,34 @@ mod pooled_thread {
                 }
             });
             PooledThread {
-                thread,
-                work_sender: sender,
+                thread: Some(thread),
+                work_sender: Some(sender),
             }
         }
 
         /// Execute work on the thread
         pub fn execute(&self, work: Function) {
-            self.work_sender.send(work).unwrap()
+            self.work_sender
+                .as_ref()
+                .expect("The sender should sill be open when executing")
+                .send(work)
+                .expect("The thread with the receiver should still be open");
+        }
+    }
+
+    /// Drop waits for the thread to finish
+    impl Drop for PooledThread {
+        fn drop(&mut self) {
+            // drop the work sender so the thread no longer receives any new jobs
+            // (as the receiver will close and return None when trying to iterate to the next message)
+            self.work_sender.take();
+
+            // stop the job (if any) running on the thread
+            self.thread
+                .take()
+                .expect("Thread shouldn't be dropped yet")
+                .join()
+                .unwrap()
         }
     }
 }
