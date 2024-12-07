@@ -2,20 +2,21 @@ use crate::http::{HttpRequest, HttpResponse, HttpStatus, HttpVersion};
 use crate::thread_pool::ThreadPool;
 use std::io::{BufRead, BufReader, Write};
 use std::net::{TcpListener, TcpStream};
+use std::sync::Arc;
 
 /// Handles all connections to a TcpListener and sends responses based on the response_fn
-pub struct Server {
+pub struct Server<F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static> {
     listener: TcpListener,
     thread_pool: ThreadPool,
-    response_fn: fn(HttpRequest) -> HttpResponse,
+    response_fn: Arc<F>,
 }
 
-impl Server {
-    pub fn new(listener: TcpListener, response_fn: fn(HttpRequest) -> HttpResponse) -> Self {
+impl<F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static> Server<F> {
+    pub fn new(listener: TcpListener, response_fn: F) -> Self {
         Server {
             listener,
             thread_pool: ThreadPool::new(8),
-            response_fn,
+            response_fn: Arc::new(response_fn),
         }
     }
 
@@ -26,15 +27,17 @@ impl Server {
         for stream in self.listener.incoming() {
             println!("Received new tcpstream");
             match stream {
-                Ok(stream) => self
-                    .thread_pool
-                    .execute(move || Server::handle_connection(stream, self.response_fn)),
+                Ok(stream) => {
+                    let cloned_fn = Arc::clone(&self.response_fn);
+                    self.thread_pool
+                        .execute(move || Server::handle_connection(stream, cloned_fn.as_ref()))
+                }
                 Err(err) => println!("Failed to read connection, received error: {}", err.kind()),
             }
         }
     }
 
-    fn handle_connection(mut stream: TcpStream, response_fn: fn(HttpRequest) -> HttpResponse) {
+    fn handle_connection(mut stream: TcpStream, response_fn: &F) {
         println!("Connection established!");
 
         let buf_reader = BufReader::new(&stream);
